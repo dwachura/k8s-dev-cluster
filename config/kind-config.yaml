@@ -1,0 +1,11 @@
+apiVersion: kind.x-k8s.io/v1alpha4
+kind: Cluster
+name: ${K8S_DEV_CLUSTER_NAME} # subsitituted with envsubst
+containerdConfigPatches:
+- |-
+  [plugins."io.containerd.grpc.v1.cri".registry.mirrors."docker-registry.cluster.local"]
+    endpoint = ["http://localhost:30000"]
+nodes:
+  - role: control-plane
+  # - role: worker
+  # - role: worker
