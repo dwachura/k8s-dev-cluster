@@ -24,21 +24,31 @@ Before the usage, K8S_DEV_CLUSTER_NAME environment variable must be set that spe
 
   * creation  
     `devclusterctl init`
-  * update
+  * update  
     `devclusterctl update`
-  * removal 
+  * removal  
     `devclusterctl delete`
 
-### Cluster local registry
+## Apps available
 
-There is cluster-local docker registry created into the cluster. It's available through NGINX ingress under `docker-registry.${K8S_DEV_CLUSTER_NAME}.localdev.me` host, on port `80 `.
+### [NGINX ingress controller](https://kubernetes.github.io/ingress-nginx/)
 
-To be able to access it from outside of the cluster (to push images for example) ingress needs to be exposed, for example using kubectl port forwarding feature:
+Ingress controller based on NGINX server.
+
+**Exposing cluster to external world**
+
+To be able to access applications from outside of the cluster via ingresses, one may expose ports (by default, 80 for http and 443 for https) of the ingress controller service, for example using kubectl port forwarding feature:
 ```
-kubectl port-forward -n ingress-nginx service/ingress-nginx-controller <host machine port>:80
+kubectl port-forward -n ingress-nginx service/ingress-nginx-controller <host machine port>:<ingress controller service port>
 ```
+
+### Docker registry
+
+Cluster-local docker registry.
 
 **Pushing docker images**
+
+Registry is available through NGINX ingress under `docker-registry.${K8S_DEV_CLUSTER_NAME}.localdev.me` host, on port `80`.
 
 Then, one may push images to the docker registry on the cluster like (assuming cluster name was set to "dev-cluster"):
 ```
@@ -53,3 +63,10 @@ After docker image was pushed into the cluster's docker-registry, it may be used
 docker-registry.cluster.local/<image name>:<image tag>
 ```
 
+### [Keycloak](https://www.keycloak.org/)
+
+**Login into admin console**
+
+Keycloak is available through NGINX ingress under `keycloak.${K8S_DEV_CLUSTER_NAME}.localdev.me` host, on port `80`.
+
+Administrator credentials are `admin:admin`.
