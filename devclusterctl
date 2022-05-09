@@ -42,6 +42,11 @@ delete_cluster () {
   kind delete cluster --name "$K8S_DEV_CLUSTER_NAME"
 }
 
+forward_ports () {
+  echo "Forwarding ports..."
+  kubectl port-forward -n nginx-ingress service/nginx-ingress-controller 0:80 0:443
+}
+
 print_usage () {
   echo "Usage: $SCRIPT_NAME <operation>"
   echo ""
@@ -53,6 +58,7 @@ print_usage () {
   echo "delete - removes cluster"
   echo "update - update state of a cluster"
   echo "recreate - combination of delete + init"
+  echo "ports-fwd - forwarding cluster ports (80 & 443 to random local ones)"
 }
 
 mkdir -p $TMP_DIR
@@ -61,6 +67,7 @@ case $1 in
   delete) delete_cluster ;;
   update) update_cluster ;;
   recreate) delete_cluster && start_cluster && update_cluster ;;
+  ports-fwd) forward_ports ;;
   *) echo "ERROR: Unknown operation \"$1\"" >&2 && echo && print_usage
 esac
 rm -rf $TMP_DIR

@@ -39,8 +39,9 @@ Ingress controller based on NGINX server.
 
 To be able to access applications from outside of the cluster via ingresses, one may expose ports (by default, 80 for http and 443 for https) of the ingress controller service, for example using kubectl port forwarding feature:
 ```
-kubectl port-forward -n ingress-nginx service/ingress-nginx-controller <host machine port>:<ingress controller service port>
+kubectl port-forward -n nginx-ingress service/nginx-ingress-controller <host machine port>:<ingress controller service port>
 ```
+One may use `debclusterctl ports-fwd` as a shortcut to the above one (which forwards both http and https cluster ports to the random local ports).
 
 ### Docker registry
 
