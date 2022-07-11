@@ -3,10 +3,12 @@ settings:
 helmRepos:
   nginx-ingress: https://kubernetes.github.io/ingress-nginx
   docker-registry: https://helm.twun.io
+  prometheus-community: https://prometheus-community.github.io/helm-charts
   keycloak: https://charts.bitnami.com/bitnami
 namespaces:
   nginx-ingress:
   docker-registry:
+  kube-prometheus:
   keycloak:
 apps:
   nginx-ingress:
@@ -35,6 +37,19 @@ apps:
       ingress.enabled: true
       ingress.hosts[0]: docker-registry.${K8S_DEV_CLUSTER_NAME}.localdev.me
       ingress.className: nginx
+  kube-prometheus:
+    name: kube-prometheus
+    description: kube-prometheus stack
+    namespace: kube-prometheus
+    chart: "prometheus-community/kube-prometheus-stack"
+    version: "36.6.2"
+    enabled: true
+    priority: -998
+    set:
+      grafana.ingress.enabled: true
+      grafana.ingress.ingressClassName: nginx
+      grafana.ingress.hosts[0]: grafana.${K8S_DEV_CLUSTER_NAME}.localdev.me
+      grafana.adminPassword: password
   keycloak:
     name: keycloak
     description: Keycloak
@@ -42,7 +57,7 @@ apps:
     chart: "keycloak/keycloak"
     version: "6.1.1"
     enabled: true
-    priority: -998
+    priority: -997
     set:
       ingress.enabled: true
       ingress.hostname: keycloak.${K8S_DEV_CLUSTER_NAME}.localdev.me

@@ -64,6 +64,18 @@ After docker image was pushed into the cluster's docker-registry, it may be used
 docker-registry.cluster.local/<image name>:<image tag>
 ```
 
+### [kube-prometheus stack](https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack)
+
+**Login into admin console**
+
+Grafana is available through NGINX ingress under `grafana.${K8S_DEV_CLUSTER_NAME}.localdev.me` host, on port `80`.
+
+Administrator credentials are `admin:password`.
+
+**NOTE:**
+There seems to be some problems with communication between prometheus and some cluster's components (namely etcd and kube-proxy).
+That's probably can be fixed by tweaking some cluster confing (partially done for fixing the same issue for controller manager and scheduler components).
+
 ### [Keycloak](https://www.keycloak.org/)
 
 **Login into admin console**
