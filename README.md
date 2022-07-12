@@ -4,19 +4,19 @@
 
 The goal of this project is to provide Kubernetes cluster for local development and testing.
 
-The single node cluster created consists of cluster-local docker registry and NGINX ingress pre-configured.
+Please note, that this configuration do not aim to be secure, efficient (both performant- and resource-like) and to fulfill other requirements that a good k8s cluster should have. In other words...  
+**...DO NOT USE IT ON PRODUCTION ENVIRONMENTS!**
 
 ## Requirements
 
-  * docker (>=20.10.8)
-  * kubectl (>=1.23)
-  * kind (>=0.11.1)
-  * helmsman (>=3.8.0)
+  * docker (>=20.10.16)
+  * kubectl (>=1.24)
+  * kind (>=0.14.0)
+  * helmsman (>=3.12.0)
 
 ## Usage
 
-There is `devclusterctl` script prepared that works as a simple CLI tool to provide easy
-and intuitive (hopefully) way to manage the cluster. It's recommended to add it to operating system's PATH variable.
+There is `devclusterctl` script prepared that works as a simple CLI tool to provide easy and intuitive (hopefully) way to manage the cluster. It's recommended to add it to operating system's PATH variable.
 
 Before the usage, K8S_DEV_CLUSTER_NAME environment variable must be set that specifies the name of the cluster (created by _kind_) that the `devclusterctl` will manage.
 
@@ -68,13 +68,15 @@ docker-registry.cluster.local/<image name>:<image tag>
 
 **Login into admin console**
 
-Grafana is available through NGINX ingress under `grafana.${K8S_DEV_CLUSTER_NAME}.localdev.me` host, on port `80`.
+Services available through NGINX ingress:
+  - Prometheus: `prometheus.${K8S_DEV_CLUSTER_NAME}.localdev.me` host, on port `80`
+  - Alertmanager: `alertmanager.${K8S_DEV_CLUSTER_NAME}.localdev.me` host, on port `80`
+  - Grafana: `grafana.${K8S_DEV_CLUSTER_NAME}.localdev.me` host, on port `80`
 
-Administrator credentials are `admin:password`.
+Grafana's administrator credentials: `admin:password`.
 
 **NOTE:**
-There seems to be some problems with communication between prometheus and some cluster's components (namely etcd and kube-proxy).
-That's probably can be fixed by tweaking some cluster confing (partially done for fixing the same issue for controller manager and scheduler components).
+To mitigate the issues with Prometheus being not able to communicate with k8s components, namely: etcd, kube-proxy, kube-controller-manager and kube-scheduler, they were exposed to all network interfaces (in case of kube-proxy TLS was disabled as well) - see [kind-config.yaml](./config/kind-config.yaml).
 
 ### [Keycloak](https://www.keycloak.org/)
 

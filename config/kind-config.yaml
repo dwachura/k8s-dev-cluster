@@ -1,8 +1,6 @@
 apiVersion: kind.x-k8s.io/v1alpha4
 kind: Cluster
 name: ${K8S_DEV_CLUSTER_NAME} # subsitituted with envsubst
-networking:
-  apiServerAddress: "0.0.0.0"
 containerdConfigPatches:
 - |-
   [plugins."io.containerd.grpc.v1.cri".registry.mirrors."docker-registry.cluster.local"]
@@ -10,23 +8,15 @@ containerdConfigPatches:
 nodes:
   - role: control-plane
     kubeadmConfigPatches:
-    # - |
-    #   kind: KubeletConfiguration
-    #   authentication:
-    #     webhook:
-    #       enabled: true
-    #   authorization:
-    #     mode: Webhook
-    # - |
-    #   kind: KubeProxyConfiguration
-    #   bindAddress: 0.0.0.0
+    - |
+      kind: KubeProxyConfiguration
+      metricsBindAddress: 0.0.0.0
     - |
       kind: ClusterConfiguration
-      # etcd:
-      #   local:
-      #     extraArgs:
-      #       listen-peer-urls: 0.0.0.0
-      #       listen-client-urls: 0.0.0.0
+      etcd:
+        local:
+          extraArgs:
+            listen-client-urls: "https://0.0.0.0:2379,http://0.0.0.0:2379"
       controllerManager:
         extraArgs:
           bind-address: 0.0.0.0

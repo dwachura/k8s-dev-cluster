@@ -56,6 +56,12 @@ apps:
       grafana.ingress.ingressClassName: nginx
       grafana.ingress.hosts[0]: grafana.${K8S_DEV_CLUSTER_NAME}.localdev.me
       grafana.adminPassword: password
+      prometheus.ingress.enabled: true
+      prometheus.ingress.ingressClassName: nginx
+      prometheus.ingress.hosts[0]: prometheus.${K8S_DEV_CLUSTER_NAME}.localdev.me
+      alertmanager.ingress.enabled: true
+      alertmanager.ingress.ingressClassName: nginx
+      alertmanager.ingress.hosts[0]: alertmanager.${K8S_DEV_CLUSTER_NAME}.localdev.me
   keycloak:
     name: keycloak
     description: Keycloak
