@@ -21,8 +21,14 @@ apps:
     priority: -1000
     set:
       nameOverride: nginx-ingress
-      controller.admissionWebhooks.enabled: false
       controller.config.proxy-body-size: "0"
+    hooks:
+        postInstall: |
+          kubectl wait
+          --namespace nginx-ingress
+          --for=condition=ready pod
+          --selector=app.kubernetes.io/component=controller
+          --timeout=90s
   docker-registry:
     name: docker-registry
     description: Cluster's local docker registry
